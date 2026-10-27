@@ -1,0 +1,40 @@
+{
+  "name": "voiceforge-mvp",
+  "version": "0.1.1",
+  "description": "Local, non-AI voice character editor",
+  "main": "main.js",
+  "author": "VoiceForge",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "studio.voiceforge.mvp",
+    "productName": "VoiceForge",
+    "directories": {
+      "output": "release-portable"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "artifactName": "VoiceForge-${version}-Portable.${ext}"
+  }
+}

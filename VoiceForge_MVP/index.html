@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VoiceForge 0.1.1 Portable</title>
+<style>
+:root{color-scheme:dark;--bg:#101218;--panel:#191d27;--panel2:#202635;--line:#303849;--text:#f1f4fa;--muted:#a2acc0;--accent:#a78bfa;--accent2:#7c5ce7;--green:#72e0b1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 0%,#25203e 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:24px 30px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px}
+.logo{font-size:24px;font-weight:800;letter-spacing:-.7px}.logo span{color:var(--accent)}.tag{font-size:12px;color:var(--muted);margin-top:2px}
+.badge{border:1px solid #3c4560;border-radius:99px;padding:7px 11px;color:#c9c2ff;font-size:12px;white-space:nowrap}
+main{max-width:1200px;margin:auto;padding:26px 30px 40px}.intro{margin-bottom:22px}.intro h1{font-size:27px;letter-spacing:-.8px;margin:0 0 5px}.intro p{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}.panel{background:linear-gradient(145deg,#1b202b,#161a23);border:1px solid var(--line);border-radius:16px;padding:20px;min-width:0}
+.panel h2{font-size:16px;margin:0 0 14px}.drop{border:1px dashed #515b75;border-radius:12px;padding:22px;text-align:center;background:#141823;cursor:pointer;transition:.2s}.drop:hover{border-color:var(--accent);background:#1a1a2a}.drop strong{display:block;font-size:15px;margin-bottom:5px}.drop small{color:var(--muted)}
+button,.filebtn{border:0;border-radius:9px;background:var(--accent2);color:white;padding:10px 14px;font:inherit;font-weight:650;cursor:pointer}.secondary{background:#2b3242;border:1px solid #414b61}.buttonrow{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.fileinfo{margin-top:13px;padding:11px 12px;background:var(--panel2);border-radius:9px;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.wave{height:66px;background:#121722;border:1px solid #293145;border-radius:9px;margin-top:12px;display:flex;align-items:center;gap:2px;padding:8px;overflow:hidden}.bar{flex:1;min-width:2px;background:#8870df;border-radius:3px;opacity:.85}
+.control{margin:18px 0}.controltop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}.control label{font-weight:650}.value{color:var(--green);font-variant-numeric:tabular-nums;font-size:13px}input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}.rangeends{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.preset{background:#252b3a;border:1px solid #394258;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer}.preset:hover{border-color:var(--accent)}.preset b{display:block;font-size:13px}.preset small{color:var(--muted);font-size:11px}
+.status{margin-top:16px;border-radius:10px;padding:11px 13px;background:#14251f;border:1px solid #285342;color:#a5f2d1;font-size:13px;min-height:42px}
+.footer{color:#778198;font-size:11px;margin-top:18px}.full{grid-column:1/-1}.exportrow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.exportrow p{margin:0;color:var(--muted);font-size:13px}
+@media(max-width:800px){header{padding:18px}.grid{grid-template-columns:1fr}main{padding:20px 14px}.full{grid-column:auto}.badge{display:none}}
+</style>
+</head>
+<body>
+<header><div><div class="logo">VOICE<span>FORGE</span></div><div class="tag">Character Voice Lab · MVP 0.1.1 · PORTABLE</div></div><div class="badge">● Procesamiento local · Sin IA</div></header>
+<main>
+<div class="intro"><h1>Dale forma a tus voces.</h1><p>Importa tu actuación, prueba un carácter vocal y exporta el resultado para tus animaciones.</p></div>
+<div class="grid">
+<section class="panel">
+<h2>01 · Tu grabación</h2>
+<div class="drop" id="drop"><strong>Arrastra tu audio aquí</strong><small>o haz clic para seleccionar · WAV, MP3, OGG, M4A</small><input id="file" type="file" accept="audio/*" hidden></div>
+<div class="fileinfo" id="fileinfo">Todavía no has cargado un audio.</div>
+<div class="wave" id="wave" aria-label="Vista previa de la forma de onda"></div>
+<div class="buttonrow"><button id="playOriginal" class="secondary" disabled>▶ Original</button><button id="playEffect" disabled>▶ Escuchar transformación</button><button id="stop" class="secondary" disabled>■ Detener</button></div>
+<div class="status" id="status">Listo. Importa una grabación para comenzar.</div>
+</section>
+<section class="panel">
+<h2>02 · Perfil rápido</h2>
+<div class="presets">
+<div class="preset" data-pitch="5" data-formant="3" data-bright="2"><b>🧒 Infantil</b><small>Ligera y aguda</small></div>
+<div class="preset" data-pitch="2" data-formant="1" data-bright="1"><b>♀ Femenina</b><small>Más brillante</small></div>
+<div class="preset" data-pitch="-3" data-formant="-2" data-bright="-1"><b>👴 Anciana</b><small>Grave y suave</small></div>
+<div class="preset" data-pitch="-5" data-formant="-3" data-bright="-2"><b>👹 Monstruo</b><small>Oscura y grave</small></div>
+<div class="preset" data-pitch="0" data-formant="0" data-bright="0"><b>◉ Natural</b><small>Sin cambios</small></div>
+<div class="preset" data-pitch="3" data-formant="0" data-bright="2"><b>🎭 Cómico</b><small>Aguda y brillante</small></div>
+</div>
+<div class="control"><div class="controltop"><label for="pitch">Pitch · tono</label><span class="value" id="pitchVal">0 semitonos</span></div><input id="pitch" type="range" min="-12" max="12" value="0" step="1"><div class="rangeends"><span>-12 grave</span><span>+12 agudo</span></div></div>
+<div class="control"><div class="controltop"><label for="formant">Resonancia / carácter</label><span class="value" id="formantVal">0</span></div><input id="formant" type="range" min="-6" max="6" value="0" step="1"><div class="rangeends"><span>Oscura</span><span>Brillante</span></div></div>
+<div class="control"><div class="controltop"><label for="brightness">Presencia</label><span class="value" id="brightnessVal">0 dB</span></div><input id="brightness" type="range" min="-6" max="6" value="0" step="1"><div class="rangeends"><span>Suave</span><span>Presente</span></div></div>
+</section>
+<section class="panel full">
+<div class="exportrow"><div><h2 style="margin-bottom:4px">03 · Exportar actuación</h2><p>Exportación WAV de 16 bits. El cambio de tono también altera la duración en esta versión inicial.</p></div><div class="buttonrow" style="margin-top:0"><button id="export" disabled>⇩ Exportar WAV</button><button id="reset" class="secondary">Restablecer ajustes</button></div></div>
+<div class="footer">MVP técnico: los perfiles son puntos de partida, no simulaciones perfectas de edad o género. Los controles de resonancia y presencia son aproximaciones mediante filtros; no hay clonación de voz ni servicios en la nube.</div>
+</section>
+</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let audioCtx, buffer = null, source = null, activeNodes = [], fileName = '';
+function setStatus(s){$('status').textContent=s}
+function ctx(){if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended')audioCtx.resume(); return audioCtx}
+function stop(){if(source){try{source.stop()}catch(e){} source=null} activeNodes.forEach(n=>{try{n.disconnect()}catch(e){}});activeNodes=[];$('stop').disabled=true}
+function settings(){return {pitch:+$('pitch').value,formant:+$('formant').value,brightness:+$('brightness').value}}
+function buildGraph(c, src, s){
+  src.playbackRate.value=Math.pow(2,s.pitch/12);
+  const low=c.createBiquadFilter();low.type='lowshelf';low.frequency.value=280;low.gain.value=-s.formant*0.65;
+  const mid=c.createBiquadFilter();mid.type='peaking';mid.frequency.value=1500*Math.pow(2,s.formant/8);mid.Q.value=0.8;mid.gain.value=s.formant*1.15;
+  const high=c.createBiquadFilter();high.type='highshelf';high.frequency.value=3200;high.gain.value=s.brightness;
+  const comp=c.createDynamicsCompressor();comp.threshold.value=-10;comp.knee.value=12;comp.ratio.value=2;comp.attack.value=.004;comp.release.value=.18;
+  src.connect(low);low.connect(mid);mid.connect(high);high.connect(comp);comp.connect(c.destination);
+  return [low,mid,high,comp];
+}
+function play(effected){
+ if(!buffer){setStatus('Primero importa un archivo de audio.');return} stop();
+ const c=ctx();source=c.createBufferSource();source.buffer=buffer;
+ if(effected) activeNodes=buildGraph(c,source,settings()); else source.connect(c.destination);
+ source.onended=()=>{if(source){source=null;$('stop').disabled=true}};
+ source.start();$('stop').disabled=false;setStatus(effected?'Reproduciendo la versión transformada.':'Reproduciendo el audio original.');
+}
+function drawWave(buf){
+ const root=$('wave');root.innerHTML='';const data=buf.getChannelData(0), count=100, step=Math.max(1,Math.floor(data.length/count));
+ for(let i=0;i<count;i++){let peak=0;for(let j=i*step;j<Math.min(data.length,(i+1)*step);j+=Math.max(1,Math.floor(step/30)))peak=Math.max(peak,Math.abs(data[j]));const b=document.createElement('div');b.className='bar';b.style.height=(4+peak*46)+'px';root.appendChild(b)}
+}
+async function loadFile(f){
+ if(!f)return;if(!f.type.startsWith('audio/')&&!/\.(wav|mp3|ogg|m4a|aac|flac)$/i.test(f.name)){setStatus('Ese formato no parece ser un archivo de audio compatible.');return}
+ stop();setStatus('Cargando audio…');fileName=f.name;
+ try{const arr=await f.arrayBuffer();buffer=await ctx().decodeAudioData(arr.slice(0));$('fileinfo').textContent=`${f.name} · ${buffer.duration.toFixed(2)} s · ${buffer.sampleRate} Hz · ${buffer.numberOfChannels===1?'Mono':'Estéreo'}`;drawWave(buffer);['playOriginal','playEffect','stop','export'].forEach(id=>$(id).disabled=false);setStatus('Audio cargado. Ajusta los controles y escucha el resultado.')}
+ catch(e){buffer=null;setStatus('No se pudo leer el archivo. Prueba con WAV o MP3.');$('fileinfo').textContent=f.name}
+}
+$('drop').addEventListener('click',()=> $('file').click());$('file').addEventListener('change',e=>loadFile(e.target.files[0]));
+$('drop').addEventListener('dragover',e=>{e.preventDefault();$('drop').style.borderColor='#a78bfa'});
+$('drop').addEventListener('dragleave',()=> $('drop').style.borderColor='');
+$('drop').addEventListener('drop',e=>{e.preventDefault();$('drop').style.borderColor='';loadFile(e.dataTransfer.files[0])});
+$('playOriginal').onclick=()=>play(false);$('playEffect').onclick=()=>play(true);$('stop').onclick=stop;
+function updateLabels(){$('pitchVal').textContent=`${+$('pitch').value>0?'+':''}${$('pitch').value} semitonos`;$('formantVal').textContent=$('formant').value;$('brightnessVal').textContent=`${+$('brightness').value>0?'+':''}${$('brightness').value} dB`}
+['pitch','formant','brightness'].forEach(id=>$(id).addEventListener('input',updateLabels));
+document.querySelectorAll('.preset').forEach(p=>p.onclick=()=>{$('pitch').value=p.dataset.pitch;$('formant').value=p.dataset.formant;$('brightness').value=p.dataset.bright;updateLabels();setStatus('Perfil aplicado. Escucha la transformación para comprobar el resultado.')});
+$('reset').onclick=()=>{$('pitch').value=0;$('formant').value=0;$('brightness').value=0;updateLabels();setStatus('Ajustes restablecidos.')};
+function wavBytes(audioBuffer){
+ const channels=audioBuffer.numberOfChannels, frames=audioBuffer.length, sampleRate=audioBuffer.sampleRate;
+ const out=new ArrayBuffer(44+frames*channels*2), v=new DataView(out);
+ const write=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+ write(0,'RIFF');v.setUint32(4,36+frames*channels*2,true);write(8,'WAVE');write(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,channels,true);v.setUint32(24,sampleRate,true);v.setUint32(28,sampleRate*channels*2,true);v.setUint16(32,channels*2,true);v.setUint16(34,16,true);write(36,'data');v.setUint32(40,frames*channels*2,true);
+ let offset=44;for(let i=0;i<frames;i++)for(let ch=0;ch<channels;ch++){let s=Math.max(-1,Math.min(1,audioBuffer.getChannelData(ch)[i]));v.setInt16(offset,s<0?s*32768:s*32767,true);offset+=2}return out;
+}
+$('export').onclick=async()=>{
+ if(!buffer)return;stop();setStatus('Procesando y preparando el WAV…');
+ try{
+  const s=settings(),rate=Math.pow(2,s.pitch/12),length=Math.ceil(buffer.length/rate);
+  const off=new OfflineAudioContext(buffer.numberOfChannels,length,buffer.sampleRate),src=off.createBufferSource();src.buffer=buffer;buildGraph(off,src,s);src.start(0);
+  const rendered=await off.startRendering(),bytes=wavBytes(rendered),res=await window.voiceForge.saveWav(Array.from(new Uint8Array(bytes)));
+  if(!res.canceled)setStatus('WAV exportado correctamente.');else setStatus('Exportación cancelada.');
+ }catch(e){console.error(e);setStatus('No se pudo exportar. Inténtalo con un archivo más corto.')}
+};
+updateLabels();
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+VOICEFORGE 0.1.1 PORTABLE — BUILD AUTOMÁTICO
+
+Esta versión parte del MVP 0.1 que ya te funcionó. No requiere que compiles en tu PC:
+GitHub Actions compila el ejecutable en una máquina Windows en la nube.
+
+QUÉ CAMBIA
+- Versión identificable como 0.1.1 Portable para no confundirla con el EXE anterior.
+- Se genera solamente el ejecutable portable, sin instalador NSIS.
+- El flujo de compilación está en .github/workflows/build-windows.yml.
+
+CÓMO OBTENER EL EXE
+1. Entra en https://github.com y crea un repositorio nuevo vacío llamado VoiceForge.
+2. Sube los archivos de esta carpeta al repositorio con "Add file" / "Upload files".
+   Si la web no permite subir la carpeta oculta .github, no pasa nada: créala en el paso 3.
+3. En GitHub, abre Actions → New workflow → "set up a workflow yourself".
+   Pon como nombre del archivo: build-windows.yml
+   Copia el contenido del archivo .github/workflows/build-windows.yml de este paquete
+   y confirma el commit.
+4. Abre la pestaña Actions y selecciona "Build VoiceForge portable for Windows".
+5. Pulsa "Run workflow".
+6. Cuando termine correctamente, abre la ejecución y descarga el artefacto
+   "VoiceForge-0.1.1-Portable-Windows".
+7. Descomprime el artefacto descargado y ejecuta VoiceForge-0.1.1-Portable.exe.
+
+IMPORTANTE
+- Este paquete es el proyecto fuente con compilación automática configurada; no contiene todavía el EXE final.
+- La compilación se ejecutará en GitHub Actions, no en tu ordenador.
+- El ejecutable solo estará disponible después de que el flujo termine correctamente.
+- Para mantener el flujo gratuito, un repositorio público suele ser la opción más sencilla.
+- No subas grabaciones de voz ni archivos personales al repositorio.
+
+SI FALLA
+Abre Actions, entra en la ejecución fallida y copia las últimas líneas del paso en rojo.
+No hace falta abrir PowerShell ni ejecutar COMPILAR.bat.
+
+PRIVACIDAD DE VOICEFORGE
+El procesamiento de audio de la aplicación sigue siendo local. El código fuente se almacena en el repositorio que elijas.
